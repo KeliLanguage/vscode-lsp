@@ -149,11 +149,13 @@ connection.onCompletion(
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
 		const keywords = ['carry', '_.tag', 'record', 'or'];
+		return KeliService.getCompletionItems();
 		return new Promise((resolve, reject) => {
 			const items = keywords.map((x) => ({
 				label: x,
 				kind: CompletionItemKind.Keyword,
 			}));
+
 			resolve(items);
 		}) ;
 		// return [
