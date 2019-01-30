@@ -48,7 +48,6 @@ connection.onInitialize((params: InitializeParams) => {
 			// Tell the client that the server supports code completion
 			completionProvider: {
 				resolveProvider: true,
-				triggerCharacters: ["."]
 			}
 		}
 	};
@@ -117,20 +116,25 @@ documents.onDidClose(e => {
 	documentSettings.delete(e.document.uri);
 });
 
+
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent(change => {
 	validateTextDocument(change.document);
 });
 
+documents.onDidSave((e) => {
+	validateTextDocument(e.document);
+});
+
 async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	// In this simple example we get the settings for every validate run.
 	let settings = await getDocumentSettings(textDocument.uri);
 
-	const diagnostics = KeliService.analyze(textDocument.getText());
-
-	// connection.window.showInformationMessage(diagnostics[0].message);
-	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	KeliService.analyze(textDocument.getText()).then((diagnostics) => {
+		connection.window.showInformationMessage(diagnostics.toString());
+		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	});
 }
 
 connection.onDidChangeWatchedFiles(_change => {
@@ -140,22 +144,30 @@ connection.onDidChangeWatchedFiles(_change => {
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion(
-	(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+	(_textDocumentPosition: TextDocumentPositionParams): Promise<CompletionItem[]> => {
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-		return [
-			{
-				label: 'TypeScript',
-				kind: CompletionItemKind.Text,
-				data: 1
-			},
-			{
-				label: 'JavaScript',
-				kind: CompletionItemKind.Text,
-				data: 2
-			}
-		];
+		const keywords = ['carry', '_.tag', 'record', 'or'];
+		return new Promise((resolve, reject) => {
+			const items = keywords.map((x) => ({
+				label: x,
+				kind: CompletionItemKind.Keyword,
+			}));
+			resolve(items);
+		}) ;
+		// return [
+		// 	{
+		// 		label: 'TypeScript',
+		// 		kind: CompletionItemKind.Keyword,
+		// 		data: 1
+		// 	},
+		// 	{
+		// 		label: 'JavaScript',
+		// 		kind: CompletionItemKind.Text,
+		// 		data: 2
+		// 	}
+		// ];
 	}
 );
 
