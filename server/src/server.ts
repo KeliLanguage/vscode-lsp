@@ -144,32 +144,19 @@ connection.onDidChangeWatchedFiles(_change => {
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion(
-	(_textDocumentPosition: TextDocumentPositionParams): Promise<CompletionItem[]> => {
+	async (_textDocumentPosition: TextDocumentPositionParams): Promise<CompletionItem[]> => {
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-		const keywords = ['carry', '_.tag', 'record', 'or'];
-		return KeliService.getCompletionItems();
-		return new Promise((resolve, reject) => {
-			const items = keywords.map((x) => ({
+		const keywords = 
+			['carry', '_.tag', 'record', 'or']
+			.map((x) => ({
 				label: x,
 				kind: CompletionItemKind.Keyword,
-			}));
+			})) as CompletionItem[];
 
-			resolve(items);
-		}) ;
-		// return [
-		// 	{
-		// 		label: 'TypeScript',
-		// 		kind: CompletionItemKind.Keyword,
-		// 		data: 1
-		// 	},
-		// 	{
-		// 		label: 'JavaScript',
-		// 		kind: CompletionItemKind.Text,
-		// 		data: 2
-		// 	}
-		// ];
+		const otherItems = await KeliService.getCompletionItems();
+		return keywords.concat(otherItems);
 	}
 );
 
