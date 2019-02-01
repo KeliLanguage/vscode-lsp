@@ -152,19 +152,21 @@ connection.onCompletion(
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
 		const position = _textDocumentPosition.position;
+		const otherItems = await KeliService.getCompletionItems();
+
 		const keywords:CompletionItem[] = [
 			{
 				label: "tag.#()",
 				detail: "Declare a carryless tag.",
 				kind: CompletionItemKind.Keyword,
-				insertText: "(tag.#(${1:tagName}))",
-				insertTextFormat: InsertTextFormat.Snippet
+				insertText: "tag.#(${1:tagName})",
+				insertTextFormat: InsertTextFormat.Snippet,
 			},
 			{
 				label: "tag.#() carry()",
 				detail: "Declare a carryful tag.",
 				kind: CompletionItemKind.Keyword,
-				insertText: "(tag.#(${1:tagName}) carry(${2:carryType}))",
+				insertText: "tag.#(${1:tagName}) carry(${2:carryType})",
 				insertTextFormat: InsertTextFormat.Snippet
 			},
 			{
@@ -174,15 +176,16 @@ connection.onCompletion(
 			}
 		];
 
-			// ['tag.#()', 'tag.#() carry()', 'record']
-			// .map((x): CompletionItem => ({
-			// 	label: x,
-			// 	kind: CompletionItemKind.Keyword,
-			// 	insertText: 
-			// }));
-
-		const otherItems = await KeliService.getCompletionItems();
-		return keywords.concat(otherItems);
+		connection.window.showInformationMessage(otherItems.length.toString());
+		if(otherItems.some((x) => 
+			x.kind === CompletionItemKind.Function || 
+			x.kind === CompletionItemKind.Enum ||
+			x.kind === CompletionItemKind.Constructor ||
+			x.kind === CompletionItemKind.Property)) {
+			return otherItems;
+		} else {
+			return otherItems.concat(keywords);
+		}
 	}
 );
 
