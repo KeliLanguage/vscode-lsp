@@ -14,7 +14,9 @@ import {
 	DidChangeConfigurationNotification,
 	CompletionItem,
 	CompletionItemKind,
-	TextDocumentPositionParams
+	TextDocumentPositionParams,
+	TextEdit,
+	InsertTextFormat
 } from 'vscode-languageserver';
 import { KeliService } from './keliService';
 
@@ -48,6 +50,7 @@ connection.onInitialize((params: InitializeParams) => {
 			// Tell the client that the server supports code completion
 			completionProvider: {
 				resolveProvider: true,
+				triggerCharacters: ["."]
 			}
 		}
 	};
@@ -148,12 +151,35 @@ connection.onCompletion(
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-		const keywords = 
-			['carry', '_.tag', 'record', 'or']
-			.map((x) => ({
-				label: x,
+		const position = _textDocumentPosition.position;
+		const keywords:CompletionItem[] = [
+			{
+				label: "tag.#()",
+				detail: "Declare a carryless tag.",
 				kind: CompletionItemKind.Keyword,
-			})) as CompletionItem[];
+				insertText: "(tag.#(${1:tagName}))",
+				insertTextFormat: InsertTextFormat.Snippet
+			},
+			{
+				label: "tag.#() carry()",
+				detail: "Declare a carryful tag.",
+				kind: CompletionItemKind.Keyword,
+				insertText: "(tag.#(${1:tagName}) carry(${2:carryType}))",
+				insertTextFormat: InsertTextFormat.Snippet
+			},
+			{
+				label: "record",
+				detail: "This keyword is use for declaring record types or anonymous record expression.",
+				kind: CompletionItemKind.Keyword
+			}
+		];
+
+			// ['tag.#()', 'tag.#() carry()', 'record']
+			// .map((x): CompletionItem => ({
+			// 	label: x,
+			// 	kind: CompletionItemKind.Keyword,
+			// 	insertText: 
+			// }));
 
 		const otherItems = await KeliService.getCompletionItems();
 		return keywords.concat(otherItems);
