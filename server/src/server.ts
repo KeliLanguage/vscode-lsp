@@ -156,18 +156,11 @@ connection.onCompletion(
 
 		const keywords:CompletionItem[] = [
 			{
-				label: "tag.#()",
-				detail: "Declare a carryless tag.",
+				label: "tags.",
+				detail: "Declare a tagged union.",
 				kind: CompletionItemKind.Keyword,
-				insertText: "tag.#(${1:tagName})",
+				insertText: "tags.\n\t#()",
 				insertTextFormat: InsertTextFormat.Snippet,
-			},
-			{
-				label: "tag.#() carry()",
-				detail: "Declare a carryful tag.",
-				kind: CompletionItemKind.Keyword,
-				insertText: "tag.#(${1:tagName}) carry(${2:carryType})",
-				insertTextFormat: InsertTextFormat.Snippet
 			},
 			{
 				label: "record",
@@ -177,11 +170,12 @@ connection.onCompletion(
 		];
 
 		connection.window.showInformationMessage(otherItems.length.toString());
-		if(otherItems.some((x) => 
-			x.kind === CompletionItemKind.Function || 
-			x.kind === CompletionItemKind.Enum ||
-			x.kind === CompletionItemKind.Constructor ||
-			x.kind === CompletionItemKind.Property)) {
+		if (otherItems.some((x) =>
+			x.kind === CompletionItemKind.Function
+			|| x.kind === CompletionItemKind.Method
+			|| x.kind === CompletionItemKind.Enum
+			|| x.kind === CompletionItemKind.Constructor
+			|| x.kind === CompletionItemKind.Property)) {
 			return otherItems;
 		} else {
 			return otherItems.concat(keywords);

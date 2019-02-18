@@ -4,7 +4,7 @@ export class KeliService {
 	private static KELI_COMPILER_PATH = "/home/hou32hou/Repos/keli/compiler/.stack-work/install/x86_64-linux/lts-13.0/8.6.3/bin/keli-compiler-exe";
 	public static analyze(fileContents: string): Promise<Diagnostic[]> {
 		return this.runCommand(fileContents, "--analyze")
-			.then((result) => result.map((x) => ({...x, message: x.message.trim(), source: "keli"})));
+			.then((result) => result.map((x) => ({...x, message: x.message.trim(), source: "[keli]"})));
 	}
 
 	public static getCompletionItems(): Promise<CompletionItem[]> {
