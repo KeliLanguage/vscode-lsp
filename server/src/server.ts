@@ -151,7 +151,6 @@ connection.onCompletion(
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-
 		const keywords:CompletionItem[] = [
 			{
 				label: "tags.",
@@ -169,7 +168,9 @@ connection.onCompletion(
 
 		const position = _textDocumentPosition.position;
 		try {
-			const otherItems = await KeliService.getCompletionItems({ ...position, character: position.character - 1});
+			const fileContents = documents.get(_textDocumentPosition.textDocument.uri).getText();
+			const otherItems = await KeliService.getCompletionItems(fileContents,
+				{ ...position, character: position.character - 1 });
 			// connection.window.showInformationMessage(otherItems.length.toString());
 			if (otherItems.some((x) =>
 				x.kind === CompletionItemKind.Function

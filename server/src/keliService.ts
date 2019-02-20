@@ -7,21 +7,21 @@ export class KeliService {
 			.then((result) => result.map((x) => ({...x, message: x.message.trim(), source: "[keli]"})));
 	}
 
-	public static getCompletionItems(position: Position): Promise<CompletionItem[]> {
-		return this.runCommand(null, "--suggest", [
+	public static getCompletionItems(fileContents:string, position: Position): Promise<CompletionItem[]> {
+		return this.runCommand(fileContents, "--suggest", [
 			"--line", position.line.toString(),
 			"--column", position.character.toString()
 		]);
 	}
 
 	private static runCommand(
-		fileContents: string | null,
+		fileContents: string,
 		commandOptions: string,
 		extraArgs : string[]): Promise<any> {
 		const { spawn } = require('child_process');
 		const fs = require("fs"); 
 		return new Promise((resolve, reject) => {
-			function continueCommand() {
+			fs.writeFile("__temp__.keli", fileContents, (err) => {
 				const command = spawn(KeliService.KELI_COMPILER_PATH, [commandOptions, "__temp__.keli"].concat(extraArgs));
 				command.stdout.on('data', (data) => {
 					try {
@@ -34,15 +34,7 @@ export class KeliService {
 					reject(data);
 					console.log("Error encountered when analyzing Keli: " + data.toString());
 				});
-			}
-			if(fileContents === null) {
-				continueCommand();
-			} else {
-				fs.writeFile("__temp__.keli", fileContents, (err) => {
-					continueCommand();
-				});
-			}
+			});
 		});
-
 	}
 }
