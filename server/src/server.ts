@@ -151,8 +151,7 @@ connection.onCompletion(
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-		const position = _textDocumentPosition.position;
-		const otherItems = await KeliService.getCompletionItems({ ...position, character: position.character - 1});
+
 		const keywords:CompletionItem[] = [
 			{
 				label: "tags.",
@@ -168,16 +167,22 @@ connection.onCompletion(
 			}
 		];
 
-		// connection.window.showInformationMessage(otherItems.length.toString());
-		if (otherItems.some((x) =>
-			x.kind === CompletionItemKind.Function
-			|| x.kind === CompletionItemKind.Method
-			|| x.kind === CompletionItemKind.Enum
-			|| x.kind === CompletionItemKind.Constructor
-			|| x.kind === CompletionItemKind.Property)) {
-			return otherItems;
-		} else {
-			return otherItems.concat(keywords);
+		const position = _textDocumentPosition.position;
+		try {
+			const otherItems = await KeliService.getCompletionItems({ ...position, character: position.character - 1});
+			// connection.window.showInformationMessage(otherItems.length.toString());
+			if (otherItems.some((x) =>
+				x.kind === CompletionItemKind.Function
+				|| x.kind === CompletionItemKind.Method
+				|| x.kind === CompletionItemKind.Enum
+				|| x.kind === CompletionItemKind.Constructor
+				|| x.kind === CompletionItemKind.Property)) {
+				return otherItems;
+			} else {
+				return otherItems.concat(keywords);
+			}
+		} catch (error) {
+			return keywords;
 		}
 	}
 );

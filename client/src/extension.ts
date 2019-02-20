@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, commands } from 'vscode';
 
 import {
 	LanguageClient,
@@ -47,8 +47,8 @@ export function activate(context: ExtensionContext) {
 
 	// Create the language client and start the client.
 	client = new LanguageClient(
-		'languageServerExample',
-		'Language Server Example',
+		'keliLanguageServer',
+		'Keli Language Server',
 		serverOptions,
 		clientOptions
 	);
