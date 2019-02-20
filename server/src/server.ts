@@ -135,7 +135,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	let settings = await getDocumentSettings(textDocument.uri);
 
 	KeliService.analyze(textDocument.getText()).then((diagnostics) => {
-		connection.window.showInformationMessage(diagnostics.toString());
+		// connection.window.showInformationMessage(diagnostics.toString());
 		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 	});
 }
@@ -152,8 +152,7 @@ connection.onCompletion(
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
 		const position = _textDocumentPosition.position;
-		const otherItems = await KeliService.getCompletionItems();
-
+		const otherItems = await KeliService.getCompletionItems({ ...position, character: position.character - 1});
 		const keywords:CompletionItem[] = [
 			{
 				label: "tags.",
@@ -169,7 +168,7 @@ connection.onCompletion(
 			}
 		];
 
-		connection.window.showInformationMessage(otherItems.length.toString());
+		// connection.window.showInformationMessage(otherItems.length.toString());
 		if (otherItems.some((x) =>
 			x.kind === CompletionItemKind.Function
 			|| x.kind === CompletionItemKind.Method
