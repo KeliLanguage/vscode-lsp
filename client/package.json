@@ -1,17 +1,29 @@
 {
-	"name": "lsp-sample-client",
-	"description": "VSCode part of a language server",
-	"author": "Microsoft Corporation",
+	"name": "keli-language-server",
+	"description": "A language server of Keli based on Microsoft LSP",
+	"author": "Wong Jia Hau",
 	"license": "MIT",
 	"version": "0.0.1",
-	"publisher": "vscode",
+	"publisher": "wongjiahau",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/KeliLanguage/vscode-lsp"
 	},
 	"engines": {
 		"vscode": "^1.23.0"
 	},
+	"categories": [
+        "Programming Languages",
+        "Snippets",
+        "Extension Packs"
+    ],
+    "keywords": [
+        "keli",
+		"language server"
+	],
+	"activationEvents": [
+		"onLanguage:keli"
+	], 
 	"scripts": {
 		"update-vscode": "vscode-install",
 		"postinstall": "vscode-install"
