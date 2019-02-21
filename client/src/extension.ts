@@ -16,6 +16,13 @@ import {
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
+	// create a run keli program button
+	const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+	context.subscriptions.push(myStatusBarItem);
+	myStatusBarItem.command = "keli.runThisFile";
+	myStatusBarItem.text = "▶ Run this Keli program ◀";
+	myStatusBarItem.show();
+
 	// The server is implemented in node
 	let serverModule = context.asAbsolutePath(
 		path.join('server', 'out', 'server.js')
@@ -86,14 +93,21 @@ export function deactivate(): Thenable<void> | undefined {
 
 
 const decoType = vscode.window.createTextEditorDecorationType({
-	borderWidth: "6px 0px 0px 0px",
+	borderWidth: "6px",
 	borderColor: "blue",
 	after: {
-		margin: "2em",
+		margin: "1em",
 		
 	},
 });
 
+
+/**
+ * This function will display the given outputs at the beginning of each corresponding line number
+ *
+ * @export
+ * @param {{ output: string, lineNumber: number }[]} outputs
+ */
 export function displayOutputs(outputs: { output: string, lineNumber: number }[]) {
 	const activeEditor = vscode.window.activeTextEditor;
 	const decorations = outputs.map(({ output, lineNumber }) => {
