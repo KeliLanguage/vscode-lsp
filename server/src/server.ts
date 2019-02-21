@@ -32,6 +32,7 @@ let hasConfigurationCapability: boolean = false;
 let hasWorkspaceFolderCapability: boolean = false;
 let hasDiagnosticRelatedInformationCapability: boolean = false;
 
+
 connection.onInitialize((params: InitializeParams) => {
 	let capabilities = params.capabilities;
 
@@ -222,6 +223,16 @@ connection.onDidCloseTextDocument((params) => {
 	connection.console.log(`${params.textDocument.uri} closed.`);
 });
 */
+
+connection.onNotification("keli/runThisFile", async (fileContents: string) => {
+	try {
+		const result = await KeliService.execute(fileContents);
+		connection.sendNotification("keli/runThisFileCompleted", JSON.stringify(result));
+	} catch (error) {
+		connection.window.showInformationMessage(error);
+		connection.sendNotification("keli/runThisFileFailed", error.toString());
+	}
+});
 
 // Make the text document manager listen on the connection
 // for open, change and close text document events

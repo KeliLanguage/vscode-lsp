@@ -1,6 +1,6 @@
 {
-	"name": "keli-language-server",
-	"description": "A language server of Keli based on Microsoft LSP",
+	"name": "keli-language-client",
+	"description": "A language client of Keli based on Microsoft LSP",
 	"author": "Wong Jia Hau",
 	"license": "MIT",
 	"version": "0.0.1",
