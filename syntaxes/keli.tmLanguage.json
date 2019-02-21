@@ -22,9 +22,19 @@
 		},
 		{
 			"include": "#types"
+		},
+		{
+			"include": "#comments"
 		}
 	],
 	"repository": {
+		"comments": {
+			"name": "comment.line.double-slash",
+			"patterns": [{
+				"name": "comment.line.double-slash",
+				"match": "[/][/].*"
+			}]
+		},
 		"strings": {
 			"name": "string.quoted.double.keli",
 			"begin": "\"",
