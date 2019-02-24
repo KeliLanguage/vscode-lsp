@@ -168,8 +168,11 @@ connection.onCompletion(
 		];
 
 		const position = _textDocumentPosition.position;
+		const fileContents = documents.get(_textDocumentPosition.textDocument.uri).getText();
+		const miscSuggestions =
+				[...new Set(fileContents .match(/[\w\d\’\'-]+/gi))] // Set is for removing duplicates
+				.map((x) => ({ label: x, kind: CompletionItemKind.Text }));
 		try {
-			const fileContents = documents.get(_textDocumentPosition.textDocument.uri).getText();
 			const otherItems = await KeliService.getCompletionItems(fileContents,
 				{ ...position, character: position.character - 1 });
 			// connection.window.showInformationMessage(otherItems.length.toString());
@@ -181,10 +184,10 @@ connection.onCompletion(
 				|| x.kind === CompletionItemKind.Property)) {
 				return otherItems;
 			} else {
-				return otherItems.concat(keywords);
+				return otherItems.concat(keywords).concat(miscSuggestions);
 			}
 		} catch (error) {
-			return keywords;
+			return keywords.concat(miscSuggestions);
 		}
 	}
 );
