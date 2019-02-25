@@ -57,10 +57,10 @@
 			"name": "literal.function.keli",
 			"patterns": [{
 				"name": "entity.name.function",
-				"match": "[.]\\s*([a-z][a-zA-Z0-9]*)"
+				"match": "[.]\\s*(([_]|[a-z])[a-zA-Z0-9]*)"
 			},{
 				"name": "entity.name.function",
-				"match": "\\b([a-z][a-zA-Z0-9]*)\\s*[(]"
+				"match": "\\b(([_]|[a-z])[a-zA-Z0-9]*)\\s*[(]"
 			}]
 		},
 		"tag1": {
@@ -100,7 +100,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "storage.type.keyword.keli",
-				"match": "\\b(else|record|tags)\\b"
+				"match": "\\b(else|record|tags|module)\\b"
 			}]
 		}
 	},
