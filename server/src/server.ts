@@ -157,7 +157,7 @@ connection.onCompletion(
 				label: "tags.",
 				detail: "Declare a tagged union.",
 				kind: CompletionItemKind.Keyword,
-				insertText: "tags.\n\t#()",
+				insertText: "tags.\n\tcase($1)",
 				insertTextFormat: InsertTextFormat.Snippet,
 			},
 			{
