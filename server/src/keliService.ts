@@ -11,7 +11,13 @@ export class KeliService {
 		return this.runCommand(fileContents, "--suggest", [
 			"--line", position.line.toString(),
 			"--column", position.character.toString()
-		]).then(JSON.parse);
+		])
+			.then(JSON.parse)
+			.then((xs: CompletionItem[]) =>
+				xs.map(x => {
+					x.documentation = { kind: "markdown", value: x.documentation as string };
+					return x;
+				}));
 	}
 
 	public static execute(fileContents: string): Promise<{ output: string, lineNumber: number }[]> {
