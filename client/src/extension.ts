@@ -66,13 +66,24 @@ export function activate(context: vscode.ExtensionContext) {
 	// register commands
 	context.subscriptions.push(vscode.commands.registerCommand("keli.runThisFile", () => {
 		const currentContents = vscode.window.activeTextEditor.document.getText();
+
+		// Clear the output
+		// Why not just clear by using displayOutputs([]) ?
+		//	because that will causes the decoration to be gone and will caused the code to be move towards left
+		//  so, instead of making them gone, we just convert the output into dots
+		//	so that there will be no bouncy animation (which is distracting)
+		displayOutputs(previousOutputs.map(x =>
+			({ ...x, output: Array.from({length: x.output.length}).map(x => "").join(".") + "." })));
+
 		client.sendNotification("keli/runThisFile", currentContents);
 	}));
 
 	client.onReady().then(() => {
 		client.onNotification("keli/runThisFileCompleted", (outputs) => {
 			try {
-				displayOutputs(JSON.parse(outputs));
+				const parsedOutputs = JSON.parse(outputs);
+				previousOutputs = parsedOutputs;
+				displayOutputs(parsedOutputs);
 			} catch (error) {
 				vscode.window.showErrorMessage(error.toString());
 			}
@@ -83,6 +94,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	});
 }
+var previousOutputs: Output[] = [];
 
 export function deactivate(): Thenable<void> | undefined {
 	if (!client) {
@@ -101,14 +113,17 @@ const decoType = vscode.window.createTextEditorDecorationType({
 	},
 });
 
-
+interface Output {
+	output: string;
+	lineNumber: number;
+}
 /**
  * This function will display the given outputs at the beginning of each corresponding line number
  *
  * @export
  * @param {{ output: string, lineNumber: number }[]} outputs
  */
-export function displayOutputs(outputs: { output: string, lineNumber: number }[]) {
+export function displayOutputs(outputs: Output[]) {
 	const activeEditor = vscode.window.activeTextEditor;
 	const decorations = outputs.map(({ output, lineNumber }) => {
 		lineNumber--; // need to minus one, because VSCode internal line numbers starts from zero, not one
