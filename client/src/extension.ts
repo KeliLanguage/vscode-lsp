@@ -12,10 +12,15 @@ import {
 	ServerOptions,
 	TransportKind
 } from 'vscode-languageclient';
+import { AddMissingCaseProvider } from './AddMissingCaseProvider';
 
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext) {
+	// register code action provider
+	const provider = new AddMissingCaseProvider();
+	vscode.languages.registerCodeActionsProvider("keli", provider);
+
 	// create a run keli program button
 	const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
 	context.subscriptions.push(myStatusBarItem);
@@ -63,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// Start the client. This will also launch the server
 	client.start();
 
-	// register commands
+	// register command: runThisFile
 	context.subscriptions.push(vscode.commands.registerCommand("keli.runThisFile", () => {
 		const currentContents = vscode.window.activeTextEditor.document.getText();
 
@@ -78,6 +83,20 @@ export function activate(context: vscode.ExtensionContext) {
 		client.sendNotification("keli/runThisFile", currentContents);
 	}));
 
+	// register command: addMissingCases
+	context.subscriptions.push(vscode.commands
+		.registerCommand("keli.addMissingCases", (doc, range: vscode.Range, message: string) => {
+			const insertPosition = new vscode.Position(range.end.line, range.end.character + 1);
+		const edit = new vscode.WorkspaceEdit();
+		const missingCases = "\n\t" + message
+			.split("\n").slice(1)
+			.map((x) => `case(${x.trim()}):\n\t\t(undefined)`)
+			.join("\n\t");
+		edit.insert(doc.uri, insertPosition, missingCases);
+		vscode.workspace.applyEdit(edit);
+	}));
+
+	// setup on notification hook
 	client.onReady().then(() => {
 		client.onNotification("keli/runThisFileCompleted", (outputs) => {
 			try {
@@ -93,7 +112,11 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showErrorMessage(error);
 		});
 	});
+
+
 }
+
+// this variable is for the runThisFile command
 var previousOutputs: Output[] = [];
 
 export function deactivate(): Thenable<void> | undefined {
