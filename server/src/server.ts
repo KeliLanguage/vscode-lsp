@@ -161,8 +161,8 @@ connection.onCompletion(
 				insertTextFormat: InsertTextFormat.Snippet,
 			},
 			{
-				label: "record",
-				detail: "This keyword is use for declaring record types or anonymous record expression.",
+				label: "object",
+				detail: "This keyword is use for declaring object types or object expression.",
 				kind: CompletionItemKind.Keyword
 			}
 		];
