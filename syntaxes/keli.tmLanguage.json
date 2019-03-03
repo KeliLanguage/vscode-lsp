@@ -76,7 +76,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "storage.type.keyword.keli",
-				"match": "\\b(record|tags|module|default)\\b"
+				"match": "\\b(object|tags|module|default)\\b"
 			}]
 		}
 	},

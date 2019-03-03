@@ -164,6 +164,11 @@ connection.onCompletion(
 				label: "object",
 				detail: "This keyword is use for declaring object types or object expression.",
 				kind: CompletionItemKind.Keyword
+			},
+			{
+				label: "module",
+				detail: "This keyword is use for importing module",
+				kind: CompletionItemKind.Keyword
 			}
 		];
 
