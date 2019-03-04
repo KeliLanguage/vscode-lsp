@@ -166,7 +166,9 @@ connection.onCompletion(
 				kind: CompletionItemKind.Keyword
 			},
 			{
-				label: "module",
+				label: "module.import()",
+				insertText: "module.import(\"$1\")",
+				insertTextFormat: InsertTextFormat.Snippet,
 				detail: "This keyword is use for importing module",
 				kind: CompletionItemKind.Keyword
 			}
