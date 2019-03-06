@@ -1,9 +1,9 @@
 {
-	"name": "keli-language-support",
-	"description": "Keli Language Support",
+	"name": "keli",
+	"description": "Keli extension for VSCode",
 	"author": "Wong Jia Hau",
 	"license": "MIT",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/KeliLanguage/vscode-lsp"
@@ -25,29 +25,6 @@
 	],
 	"main": "./client/out/extension",
 	"contributes": {
-		"configuration": {
-			"type": "object",
-			"title": "Example configuration",
-			"properties": {
-				"languageServerExample.maxNumberOfProblems": {
-					"scope": "resource",
-					"type": "number",
-					"default": 100,
-					"description": "Controls the maximum number of problems produced by the server."
-				},
-				"languageServerExample.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VS Code and the language server."
-				}
-			}
-		},
         "languages": [{
             "id": "keli",
             "aliases": ["Keli", "keli"],
