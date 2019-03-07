@@ -70,7 +70,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// register command: runThisFile
 	context.subscriptions.push(vscode.commands.registerCommand("keli.runThisFile", () => {
-		const currentContents = vscode.window.activeTextEditor.document.getText();
+		const doc = vscode.window.activeTextEditor.document;
+		const contents = doc.getText();
+		const uri = doc.uri.path;
 
 		// Clear the output
 		// Why not just clear by using displayOutputs([]) ?
@@ -80,7 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
 		displayOutputs(previousOutputs.map(x =>
 			({ ...x, output: Array.from({length: x.output.length}).map(x => "").join(".") + "." })));
 
-		client.sendNotification("keli/runThisFile", currentContents);
+		client.sendNotification("keli/runThisFile", {uri, contents});
 	}));
 
 	// register command: addMissingCases

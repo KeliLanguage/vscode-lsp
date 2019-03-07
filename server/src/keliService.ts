@@ -1,16 +1,21 @@
 import { Diagnostic, CompletionItem, Position } from 'vscode-languageserver';
 
+export interface File {
+	uri: string;
+	contents: string;
+}
+
 export class KeliService {
 	private static KELI_COMPILER_PATH = "keli";
-	public static analyze(fileContents: string): Promise<Diagnostic[]> {
-		return this.runCommand(fileContents, "--analyze", [])
+	public static analyze(file: File): Promise<Diagnostic[]> {
+		return this.runCommand(file, "analyze", [])
 			.then((result) => JSON.parse(result).map((x) => ({...x, message: x.message.trim(), source: "[keli]"})));
 	}
 
-	public static getCompletionItems(fileContents:string, position: Position): Promise<CompletionItem[]> {
-		return this.runCommand(fileContents, "--suggest", [
-			"--line", position.line.toString(),
-			"--column", position.character.toString()
+	public static getCompletionItems(file: File, position: Position): Promise<CompletionItem[]> {
+		return this.runCommand(file, "suggest", [
+			position.line.toString(),
+			position.character.toString()
 		])
 			.then(JSON.parse)
 			.then((xs: CompletionItem[]) =>
@@ -20,8 +25,8 @@ export class KeliService {
 				}));
 	}
 
-	public static execute(fileContents: string): Promise<{ output: string, lineNumber: number }[]> {
-		return this.runCommand(fileContents, "--execute", [])
+	public static execute(file: File): Promise<{ output: string, lineNumber: number }[]> {
+		return this.runCommand(file, "run", [])
 			.then((result: string) => {
 				return result.split("\n")
 					.filter((x) => x.length > 0)
@@ -36,22 +41,25 @@ export class KeliService {
 	}
 
 	private static runCommand(
-		fileContents: string,
-		commandOptions: string,
+		file: File,
+		command: string,
 		extraArgs : string[]): Promise<any> {
 		const { spawn } = require('child_process');
 		const fs = require("fs"); 
+		const path = require("path");
+		const fileParentDir = path.basename(path.dirname(file.uri));
+		const tempFilename = fileParentDir + "/__temp__.keli";
 		return new Promise((resolve, reject) => {
-			fs.writeFile("__temp__.keli", fileContents, (err) => {
-				const command = spawn(KeliService.KELI_COMPILER_PATH, [commandOptions, "__temp__.keli"].concat(extraArgs));
-				command.stdout.on('data', (data) => {
+			fs.writeFile(tempFilename, file.contents, (err) => {
+				const process = spawn(KeliService.KELI_COMPILER_PATH, [command, tempFilename].concat(extraArgs));
+				process.stdout.on('data', (data) => {
 					try {
 						resolve(data.toString());
 					} catch (error) {
 						reject(error);
 					}
 				});
-				command.stderr.on('data', (data) => {
+				process.stderr.on('data', (data) => {
 					reject(data);
 					console.log("Error encountered when analyzing Keli: " + data.toString());
 				});

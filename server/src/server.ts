@@ -18,7 +18,7 @@ import {
 	TextEdit,
 	InsertTextFormat
 } from 'vscode-languageserver';
-import { KeliService } from './keliService';
+import { KeliService, File } from './keliService';
 
 // Create a connection for the server. The connection uses Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -131,13 +131,13 @@ documents.onDidSave((e) => {
 	validateTextDocument(e.document);
 });
 
-async function validateTextDocument(textDocument: TextDocument): Promise<void> {
+async function validateTextDocument(doc: TextDocument): Promise<void> {
 	// In this simple example we get the settings for every validate run.
-	let settings = await getDocumentSettings(textDocument.uri);
-
-	KeliService.analyze(textDocument.getText()).then((diagnostics) => {
+	let settings = await getDocumentSettings(doc.uri);
+	const file: File = { uri: doc.uri, contents: doc.getText() };
+	KeliService.analyze(file).then((diagnostics) => {
 		// connection.window.showInformationMessage(diagnostics.toString());
-		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+		connection.sendDiagnostics({ uri: doc.uri, diagnostics });
 	});
 }
 
@@ -180,8 +180,8 @@ connection.onCompletion(
 				[...new Set(fileContents .match(/[\w\d\’\'-]+/gi))] // Set is for removing duplicates
 				.map((x) => ({ label: x, kind: CompletionItemKind.Text }));
 		try {
-			const otherItems = await KeliService.getCompletionItems(fileContents,
-				{ ...position, character: position.character - 1 });
+			const file: File = { uri: _textDocumentPosition.textDocument.uri, contents: fileContents };
+			const otherItems = await KeliService.getCompletionItems(file, { ...position, character: position.character - 1 });
 			// connection.window.showInformationMessage(otherItems.length.toString());
 			if (otherItems.some((x) =>
 				x.kind === CompletionItemKind.Function
@@ -234,9 +234,9 @@ connection.onDidCloseTextDocument((params) => {
 });
 */
 
-connection.onNotification("keli/runThisFile", async (fileContents: string) => {
+connection.onNotification("keli/runThisFile", async (file: File) => {
 	try {
-		const result = await KeliService.execute(fileContents);
+		const result = await KeliService.execute(file);
 		connection.sendNotification("keli/runThisFileCompleted", JSON.stringify(result));
 	} catch (error) {
 		connection.window.showInformationMessage(error);
