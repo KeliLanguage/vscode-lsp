@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.0.3
+- Added extension dependencies:
+
+	- [Path Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense)
+
+	- [Rainbow Brackets](https://marketplace.visualstudio.com/items?itemName=2gua.rainbow-brackets)
+
 ## 0.0.2
 - Updated keliService to match with compiler command line API
 
