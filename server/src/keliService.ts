@@ -26,7 +26,7 @@ export class KeliService {
 	}
 
 	public static execute(file: File): Promise<{ output: string, lineNumber: number }[]> {
-		return this.runCommand(file, "run", [])
+		return this.runCommand(file, "run", ["--show-line-number"])
 			.then((result: string) => {
 				return result.split("\n")
 					.filter((x) => x.length > 0)
