@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.4
+- Updated syntax highlighting
+
 ## 0.0.3
 - Added extension dependencies:
 
