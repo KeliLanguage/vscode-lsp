@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.6
+- Fix minor syntax highlighting bug
+
 ## 0.0.5
 - Minor update (updated code for calling the Keli compiler CLI) 
 
