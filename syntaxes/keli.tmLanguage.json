@@ -77,8 +77,8 @@
 			}]
 		},
 		"tag2": {
-			"begin": "(case)(\\s*)([(])",
-			"end": "([)]|[.])",
+			"begin": "(case)(\\s*)([(])([.])",
+			"end": "([)]|[(])",
 			"beginCaptures": {
 				"1": { 
 					"name": "storage.type.keyword.keli"
@@ -92,7 +92,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "storage.type.keyword.keli",
-				"match": "\\b(object|tags|module|default)\\b"
+				"match": "\\b([$]|tags|module|default)\\b"
 			}]
 		}
 	},

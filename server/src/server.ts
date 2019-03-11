@@ -161,7 +161,7 @@ connection.onCompletion(
 				insertTextFormat: InsertTextFormat.Snippet,
 			},
 			{
-				label: "object",
+				label: "$",
 				detail: "This keyword is use for declaring object types or object expression.",
 				kind: CompletionItemKind.Keyword
 			},
