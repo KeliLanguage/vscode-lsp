@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.9
+- Updates keywords suggestion
+
 ## 0.0.8
 - Updated syntax highlighting to match new syntax for tagged union
 
