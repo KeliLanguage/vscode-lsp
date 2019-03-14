@@ -154,7 +154,7 @@ connection.onCompletion(
 		// info and always provide the same completion items.
 		const keywords:CompletionItem[] = [
 			{
-				label: "tags.",
+				label: "choice.",
 				detail: "Declare a tagged union.",
 				kind: CompletionItemKind.Keyword,
 				insertText: "tags.\n\tcase($1)",
@@ -176,7 +176,7 @@ connection.onCompletion(
 
 		const position = _textDocumentPosition.position;
 		const fileContents = documents.get(_textDocumentPosition.textDocument.uri).getText();
-		const miscSuggestions =
+		const miscSuggestions = 
 				[...new Set(fileContents .match(/[\w\d\’\'-]+/gi))] // Set is for removing duplicates
 				.map((x) => ({ label: x, kind: CompletionItemKind.Text }));
 		try {
