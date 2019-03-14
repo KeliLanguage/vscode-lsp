@@ -9,13 +9,10 @@
 			"include": "#keywords"
 		},
 		{
-			"include": "#tag1"
-		},
-		{
-			"include": "#tag2"
-		},
-		{
 			"include": "#functions"
+		},
+		{
+			"include": "#functions2"
 		},
 		{
 			"include": "#types"
@@ -52,47 +49,32 @@
 		},
 		"functions": {
 			"name": "literal.function.keli",
-			"patterns": [{
-				"name": "entity.name.function",
-				"match": "[.]\\s*(([_]|[a-z])[a-zA-Z0-9]*)"
-			},{
-				"name": "entity.name.function",
-				"match": "\\b(([_]|[a-z])[a-zA-Z0-9]*)\\s*[(]"
-			}]
-		},
-		"tag1": {
-			"begin": "(\\b[A-Z][a-zA-Z0-9]*)[.]",
-			"end": "([\\n]|[(]|[)]|[.])",
+			"begin": "[.]",
+			"end": "([\\n]|[(]|[)]|[.]|[\\s*])",
 			"beginCaptures": {
-				"1": { 
-					"name": "entity.name.type"
+				"0": { 
+					"name": "variable.name"
 				}
 			},
 			"patterns": [{
+				"name": "entity.name.function",
+				"match": "([(a-z)|[_]|[-!@$%^&*_+|~=:;<>?/]][a-zA-Z0-9]*)"
+			},{
 				"name": "keyword.control.tag.keli",
 				"match": "([A-Z][a-zA-Z0-9]*)"
-			},{
-				"name": "entity.name.function",
-				"match": "([a-z][a-zA-Z0-9]*)"
 			}]
 		},
-		"tag2": {
-			"begin": "(case)(\\s*)([(])([.])",
-			"end": "([)]|[(])",
-			"beginCaptures": {
-				"1": { 
-					"name": "storage.type.keyword.keli"
-				}
-			},
+		"functions2": {
+			"name": "literal.function.keli",
 			"patterns": [{
-				"name": "keyword.control.tag.keli",
-				"match": "([A-Z][a-zA-Z0-9]*)"
+				"name": "entity.name.function",
+				"match": "([(a-z)]([a-zA-Z0-9]*)(\\s*)[(])"
 			}]
 		},
 		"keywords": {
 			"patterns": [{
 				"name": "storage.type.keyword.keli",
-				"match": "\\b([$]|tags|module|default)\\b"
+				"match": "\\b([\\$]|if|then|else|choice)\\b"
 			}]
 		}
 	},
