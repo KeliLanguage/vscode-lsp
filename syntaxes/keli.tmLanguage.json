@@ -74,7 +74,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "storage.type.keyword.keli",
-				"match": "\\b([\\$]|if|then|else|choice)\\b"
+				"match": "\\b([\\$]|if|then|else|choice|module)\\b"
 			}]
 		}
 	},
