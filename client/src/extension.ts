@@ -92,7 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const edit = new vscode.WorkspaceEdit();
 		const missingCases = "\n\t" + message
 			.split("\n").slice(1)
-			.map((x) => `case(${x.trim()}):\n\t\t(undefined)`)
+			.map((x) => `if(${x.trim()}) then\n\t\t(undefined)\n`)
 			.join("\n\t");
 		edit.insert(doc.uri, insertPosition, missingCases);
 		vscode.workspace.applyEdit(edit);
