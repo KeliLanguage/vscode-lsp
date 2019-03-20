@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.11
+- Fix missing case provider
+
 ## 0.0.9
 - Updates keywords suggestion
 
