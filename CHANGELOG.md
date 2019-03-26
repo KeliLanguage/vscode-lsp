@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.0.12
+- Users will be asked to fix all the errors if they try to execute an errorneous Keli file
+
 ## 0.0.11
 - Fix missing case provider
 
