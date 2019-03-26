@@ -239,8 +239,7 @@ connection.onNotification("keli/runThisFile", async (file: File) => {
 		const result = await KeliService.execute(file);
 		connection.sendNotification("keli/runThisFileCompleted", JSON.stringify(result));
 	} catch (error) {
-		connection.window.showInformationMessage(error);
-		connection.sendNotification("keli/runThisFileFailed", error.toString());
+		connection.sendNotification("keli/runThisFileFailed", "Please fix all the errors first.");
 	}
 });
 
