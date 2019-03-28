@@ -19,7 +19,10 @@ export class KeliService {
 		])
 			.then(JSON.parse)
 			.then((xs: CompletionItem[]) =>
-				xs.map(x => {
+				xs
+				// Remove all those competion items that are prefixed with underscore (as they are private functions)
+				.filter(x => !x.label.startsWith("_"))
+				.map(x => {
 					x.documentation = { kind: "markdown", value: x.documentation as string };
 					return x;
 				}));
